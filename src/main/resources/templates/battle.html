@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Technical University Online</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+
+    <h1 th:text="'Изпитна седмица: ' + ${gameData.currentBattleRoundNumber}"></h1>
+    <p th:text="'Репутация: ' + ${gameData.points.reputation}"></p>
+    <p th:text="'Знания: ' + ${gameData.points.knowledge}"></p>
+
+    <p>Оценки от сесията до момента:</p>
+    <ul>
+      <li th:each="grade: ${gameData.grades}">
+        <span th:text="${grade}"></span>
+      </li>
+    </ul>
+
+    <form method="POST" action="#" th:object="${battleRoundForm}">
+      <input type="number" name="bet">
+      <span th:if="${#fields.hasErrors('bet')}">Моля, посочете залог.</span>
+      <input type="submit" value="Заложи">
+    </form>
+
+  </body>
+</html>

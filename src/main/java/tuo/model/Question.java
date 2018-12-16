@@ -16,6 +16,9 @@ public class Question extends AuditModel {
     @Column(unique = true)
     private String text;
 
+    public Question() {
+    }
+
     public Question(Long id, @NotNull @Size(max = 254) String text) {
         this.id = id;
         this.text = text;

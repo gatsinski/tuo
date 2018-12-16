@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Technical University Online</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+    <h1 th:text="'Учебна седмица ' + ${gameData.getCurrentRoundNumber()}"></h1>
+    <p th:text="'Въпрос ' + ${round.getCurrentQuestionNumber()} + ' от ' + ${round.getRoundQuestions().size()}"></p>
+    <p th:text="'Репутация: ' + ${gameData.points.reputation}"></p>
+    <p th:text="'Знания: ' + ${gameData.points.knowledge}"></p>
+
+    <p th:text="${question.text}"></p>
+    <form method="POST" action="#" th:object="${roundQuestionForm}">
+      <span th:if="${#fields.hasErrors('answer')}">Моля, посочете отговор.</span>
+      <div th:each="answer: ${answers}">
+        <input type="radio" th:value="${answer.id}" th:field="*{answer}">
+        <label th:for="${#ids.prev('answer')}" th:text="${answer.text}"></label>
+      </div>
+      <input type="submit" value="Избери">
+    </form>
+
+  </body>
+</html>
+
