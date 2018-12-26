@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  </head>
+  <body>
+    <th:block th:fragment="nav">
+      <ul class="menu">
+        <li>
+          <a href="/new-game" class="first_level_menu_item first">
+            Нова игра
+          </a>
+        </li>
+        <li>
+          <a href="/rules" class="first_level_menu_item first">
+            Правила
+          </a>
+        </li>
+      </ul>
+    </th:block>
+  </body>
+</html>

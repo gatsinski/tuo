@@ -1,0 +1,35 @@
+body {
+  background: #ddd;
+  max-width: 1080px;
+  margin: 0px auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 1.7em;
+}
+
+main {
+  background: #fff;
+  padding: 20px 50px;
+}
+
+/* Footer */
+footer {
+  background: #ccc;
+  padding: 20px;
+}
+
+/* Blog */
+.blog {
+  > ul {
+    list-style-type: none;
+    > li {
+      a {
+        text-decoration: none;
+        color: #437fe6;
+        &:hover {
+          color: #3869be;
+        }
+      }
+    }
+  }
+}

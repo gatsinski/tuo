@@ -1,21 +1,27 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Final score</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
+  <head>
+    <title>Final score</title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+  </head>
+  <body class="grid">
 
-  <p th:text="'Репутация: ' + ${gameData.points.reputation}"></p>
+    <nav class="col-12">
+      <th:block th:replace="fragments/nav :: nav"></th:block>
+    </nav>
 
-  <p>Оценки от сесията: </p>
-  <ul>
-    <li th:each="grade: ${gameData.grades}">
-      <span th:text="${grade}"></span>
-    </li>
-  </ul>
+    <main class="col-8">
+      <p th:text="'Репутация: ' + ${gameData.points.reputation}"></p>
 
-  <p th:text="'Краен резултат: ' + ${finalScore}"></p>
+      <p>Оценки от сесията: </p>
+      <ul>
+        <li th:each="grade: ${gameData.grades}">
+          <span th:text="${grade}"></span>
+        </li>
+      </ul>
 
-</body>
+      <p th:text="'Краен резултат: ' + ${finalScore}"></p>
+    </main>
+
+  </body>
 </html>

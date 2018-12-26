@@ -2,26 +2,34 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Technical University Online</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <th:block th:replace="fragments/head :: head"></th:block>
   </head>
-  <body>
+  <body class="grid">
 
-    <h1 th:text="'Изпитна седмица: ' + ${gameData.currentBattleRoundNumber}"></h1>
-    <p th:text="'Репутация: ' + ${gameData.points.reputation}"></p>
-    <p th:text="'Знания: ' + ${gameData.points.knowledge}"></p>
+    <nav class="col-12">
+      <th:block th:replace="fragments/nav :: nav"></th:block>
+    </nav>
 
-    <p>Оценки от сесията до момента:</p>
-    <ul>
-      <li th:each="grade: ${gameData.grades}">
-        <span th:text="${grade}"></span>
-      </li>
-    </ul>
+    <aside class="col-3">
+      <h1 th:text="'Изпитна седмица: ' + ${gameData.currentBattleRoundNumber}"></h1>
+      <p th:text="'Репутация: ' + ${gameData.points.reputation}"></p>
+      <p th:text="'Знания: ' + ${gameData.points.knowledge}"></p>
 
-    <form method="POST" action="#" th:object="${battleRoundForm}">
-      <input type="number" name="bet">
-      <span th:if="${#fields.hasErrors('bet')}">Моля, посочете залог.</span>
-      <input type="submit" value="Заложи">
-    </form>
+      <p>Оценки от сесията до момента:</p>
+      <ul>
+        <li th:each="grade: ${gameData.grades}">
+          <span th:text="${grade}"></span>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="col-9">
+      <form method="POST" action="#" th:object="${battleRoundForm}">
+        <input type="number" name="bet">
+        <span th:if="${#fields.hasErrors('bet')}">Моля, посочете залог.</span>
+        <input type="submit" value="Заложи">
+      </form>
+    </main>
 
   </body>
 </html>
