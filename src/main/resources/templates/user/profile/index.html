@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title th:text="'Профил на ' + ${user.getFullName()}"></title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <th:block th:replace="fragments/nav :: nav"></th:block>
+    </nav>
+
+    <main class="container">
+      <article class="row">
+        <section class="col-6">
+          <h1 th:text="${user.getFullName()}"/>
+
+          <div class="card mt-3" th:each="score: ${scores}">
+            <div class="card-body">
+              <h2 class="card-title" th:text="${score.score} + ' точки'"></h2>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" th:text="'Общо събрана репутация: ' + ${score.reputation} + ' точки'"/>
+              <li class="list-group-item" th:text="'Общо събрани знания: ' + ${score.knowledge} + ' точки'"/>
+              <li class="list-group-item" th:text="'Дата: ' + ${#dates.format(score.createdAt, 'dd.MM.yyyy HH:mm')}"/>
+              <li class="list-group-item">
+                Оценки от сесията:
+                <th:block th:each="grade, iter: ${score.grades}">
+                  <th:block th:text="${grade.grade}"/>
+                  <th:block th:if="${!iter.last}">, </th:block>
+                </th:block>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <aside class="col-6">
+
+        </aside>
+
+      </article>
+    </main>
+
+    <th:block th:replace="fragments/footer :: footer"></th:block>
+
+  </body>
+</html>
