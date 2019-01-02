@@ -1,0 +1,89 @@
+@charset "UTF-8";
+
+@import 'inputs/checkboxes';
+
+$color-dark: #333;
+$royal-blue: #4169E1;
+$cerulean: #007BA7;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+);
+
+body {
+  background: #ddd;
+  max-width: 1080px;
+  margin: 0px auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 100%;
+  line-height: 1.7em;
+}
+
+h1 {
+  font-size: 1.875em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+p {
+  font-size: 1em;
+}
+
+/* Header */
+.dropdown-menu {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.dropdown-item:hover {
+  background: $color-dark;
+}
+
+@media screen and (max-width: map-get($grid-breakpoints, md)) {
+  .navbar {
+    padding: 0px 16px;
+
+    .nav-item .nav-link {
+      padding: 10px 20px;
+      &:hover:not(.dropdown-toggle) {
+        background: $color-dark;
+      }
+    }
+
+    .active {
+      background: $color-dark;
+    }
+
+    .dropdown {
+      &:hover > .dropdown-menu {
+        display: block;
+      }
+      > .dropdown-toggle:active {
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+main {
+  background: #fff;
+  padding: 20px 10px;
+}
+
+/* Footer */
+footer {
+  background: #ccc;
+  padding: 20px;
+}
+
+
+
+
