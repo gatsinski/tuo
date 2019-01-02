@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="'Отговор: ' + ${answer.text}"></title>
+  <th:block th:replace="fragments/head :: head"></th:block>
+</head>
+<body class="grid">
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <th:block th:replace="fragments/nav :: nav"></th:block>
+</nav>
+
+<main class="container">
+  <article class="row">
+    <section class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h1 th:text="${answer.text}" class="card-title"/>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            Въпрос: <a th:href="@{/admin/questions/{id}(id=${answer.question.id})}" th:text="${answer.question.text}"></a>
+          </li>
+          <li class="list-group-item">
+            Репутация: <span th:text="${answer.reputation}" class="badge badge-secondary"></span>
+          </li>
+          <li class="list-group-item">
+            Знания: <span th:text="${answer.knowledge}" class="badge badge-secondary"></span>
+          </li>
+
+        </ul>
+      </div>
+
+    </section>
+
+    <aside class="col-6">
+      <form th:action="@{/admin/answers/{id}(id=${answer.id})}" th:object="${answer}" method="POST" class="container">
+
+        <div class="alert alert-danger"
+             th:if="${#fields.hasGlobalErrors()}"
+             th:each="error : ${#fields.errors('global')}"
+             th:text="${error}">
+          Validation error
+        </div>
+
+        <div class="row">
+          <div class="col-12 form-group"
+               th:classappend="${#fields.hasErrors('text')}? 'has-error':''">
+            <label for="text" class="control-label">Текст</label>
+            <input id="text"
+                   class="form-control"
+                   th:field="*{text}"/>
+            <p class="error-message"
+               th:each="error: ${#fields.errors('text')}"
+               th:text="${error}">Validation error</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6 form-group"
+               th:classappend="${#fields.hasErrors('reputation')}? 'has-error':''">
+            <label for="reputation" class="control-label">Репутация</label>
+            <input id="reputation"
+                   class="form-control"
+                   th:field="*{reputation}"/>
+            <p class="error-message"
+               th:each="error: ${#fields.errors('reputation')}"
+               th:text="${error}">Validation error</p>
+          </div>
+          <div class="col-6 form-group"
+               th:classappend="${#fields.hasErrors('knowledge')}? 'has-error':''">
+            <label for="knowledge" class="control-label">Знания</label>
+            <input id="knowledge"
+                   class="form-control"
+                   th:field="*{knowledge}"/>
+            <p class="error-message"
+               th:each="error: ${#fields.errors('knowledge')}"
+               th:text="${error}">Validation error</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 form-group">
+            <button type="submit" class="btn btn-success">Редактирай</button>
+            <a th:href="@{/admin/answers/{id}/delete(id=${answer.id})}" class="btn btn-danger">Изтрий</a>
+          </div>
+        </div>
+      </form>
+    </aside>
+  </article>
+</main>
+
+<th:block th:replace="fragments/footer :: footer"></th:block>
+
+</body>
+</html>
