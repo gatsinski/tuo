@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Technical University Online</title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+  </head>
+  <body class="grid">
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <th:block th:replace="fragments/nav :: nav"></th:block>
+    </nav>
+
+    <main class="container">
+      <article class="row">
+        <section class="col-9">
+          <h1>Technical University Online</h1>
+          <p>
+            TUO е браузър игра, която пресъздава по забавен начин ежедневието на един студент в технически университет.
+            Целта на играта е да съберете максимален брой точки репутация и минималните необходими точки знания, за да
+            вземете всеки изпит с хубава оценка. За да успеете трябва да намерите баланса между ученето и забавлението.
+          </p>
+        </section>
+
+      </article>
+    </main>
+
+    <th:block th:replace="fragments/footer :: footer"></th:block>
+
+  </body>
+</html>

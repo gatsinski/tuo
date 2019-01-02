@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Битка</title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+  </head>
+  <body class="grid">
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <th:block th:replace="fragments/nav :: nav"></th:block>
+    </nav>
+
+    <main class="container">
+      <article class="row">
+
+        <section class="col-8">
+          <form method="POST" th:action="@{battle-stage}" th:object="${battleRoundForm}">
+            <div class="form-group">
+              <label for="bet">Залог</label>:
+              <input type="number"
+                     id="bet"
+                     name="bet"
+                     class="form-control"
+                     autofocus="autofocus"
+                     placeholder="Залог"/>
+            </div>
+
+            <div class="alert alert-danger"
+                 th:if="${#fields.hasErrors('bet')}">
+              Моля, посочете отговор.
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Заложи</button>
+            </div>
+
+          </form>
+        </section>
+
+        <aside class="col-4">
+          <th:block th:replace="fragments/game/info :: info"></th:block>
+
+          <div class="card mt-5" th:unless="${gameData.grades.isEmpty()}">
+            <div class="card-body">
+              <p class="card-title">Оценки от сесията до момента:</p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" th:each="grade: ${gameData.grades}">
+                <span th:text="${grade}"></span>
+              </li>
+            </ul>
+          </div>
+        </aside>
+
+      </article>
+    </main>
+
+    <th:block th:replace="fragments/footer :: footer"></th:block>
+
+  </body>
+</html>

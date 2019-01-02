@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Боен рунд</title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+  </head>
+  <body class="grid">
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <th:block th:replace="fragments/nav :: nav"></th:block>
+    </nav>
+
+    <main class="container">
+      <article class="row">
+        <section class="col-9">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title" th:text="'Краен резултат: ' + ${score.score} + ' точки.'"></h2>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" th:text="'Общо събрана репутация: ' + ${score.reputation} + ' точки'"/>
+              <li class="list-group-item" th:text="'Общо събрани знания: ' + ${score.knowledge} + ' точки'"/>
+            </ul>
+          </div>
+
+          <div class="card mt-5" th:unless="${gameData.grades.isEmpty()}">
+            <div class="card-body">
+              <p class="card-title">Оценки от сесията:</p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" th:each="grade: ${grades}">
+                <span th:text="${grade.grade}"></span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+      </article>
+    </main>
+
+    <th:block th:replace="fragments/footer :: footer"></th:block>
+
+  </body>
+</html>

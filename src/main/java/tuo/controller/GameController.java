@@ -4,24 +4,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import tuo.dto.ScoreDto;
 import tuo.form.BattleRoundForm;
 import tuo.form.RoundQuestionForm;
-import tuo.model.Answer;
-import tuo.session.*;
-import tuo.model.Question;
+import tuo.model.*;
 import tuo.repository.AnswerRepository;
 import tuo.repository.QuestionRepository;
+import tuo.service.AuthenticationService;
+import tuo.service.GradeService;
+import tuo.service.ScoreService;
+import tuo.service.UserService;
+import tuo.session.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
+@RequestMapping("/game")
 @SessionAttributes("gameData")
 public class GameController {
     @Autowired
@@ -30,14 +37,34 @@ public class GameController {
     @Autowired
     private AnswerRepository answerRepository;
 
-    @GetMapping("/new-game")
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ScoreService scoreService;
+
+    @Autowired
+    private GradeService gradeService;
+
+    @ModelAttribute("gameData")
+    public GameData gameData() {
+        return startNewGame();
+    }
+
+    @GetMapping("")
     public String newGame(
         Model model,
         @ModelAttribute("gameData") GameData gameData
     ) {
         gameData = startNewGame();
+        if (gameData.isTheGameValid()) {
+            return "redirect:rules";
+        }
         model.addAttribute("gameData", gameData);
-        return "redirect:preparation-stage";
+        return "redirect:/game/preparation-stage";
     }
 
     @GetMapping("/preparation-stage")
@@ -46,7 +73,9 @@ public class GameController {
         @ModelAttribute("gameData") GameData gameData,
         RoundQuestionForm roundQuestionForm
     ) {
-        if (gameData.isTheGameOver()) {
+        if (gameData.isTheGameValid()) {
+            return "redirect:rules";
+        } else if (gameData.isTheGameOver()) {
             return "redirect:final-score";
         } else if (gameData.isExaminationReached()) {
             return "redirect:battle-stage";
@@ -59,7 +88,7 @@ public class GameController {
         model.addAttribute("question", roundQuestion.getQuestion());
         model.addAttribute("answers", roundQuestion.getAnswers());
         model.addAttribute("gameData", gameData);
-        return "preparation";
+        return "game/preparation";
     }
 
     @PostMapping("/preparation-stage")
@@ -70,7 +99,9 @@ public class GameController {
         BindingResult bindingResult,
         HttpServletRequest request
     ) {
-        if (gameData.isTheGameOver()) {
+        if (gameData.isTheGameValid()) {
+            return "redirect:rules";
+        } else if (gameData.isTheGameOver()) {
             return "redirect:final-score";
         }
 
@@ -101,7 +132,7 @@ public class GameController {
         model.addAttribute("question", roundQuestion.getQuestion());
         model.addAttribute("answers", roundQuestion.getAnswers());
         model.addAttribute("gameData", gameData);
-        return "preparation";
+        return "game/preparation";
     }
 
     @GetMapping("/battle-stage")
@@ -110,14 +141,16 @@ public class GameController {
         @ModelAttribute("gameData") GameData gameData,
         BattleRoundForm battleRoundForm
     ) {
-        if (gameData.isTheGameOver()) {
+        if (gameData.isTheGameValid()) {
+            return "redirect:rules";
+        } else if (gameData.isTheGameOver()) {
             return "redirect:final-score";
         } else if (!gameData.isExaminationReached()) {
             return "redirect:preparation-stage";
         }
 
         model.addAttribute("gameData", gameData);
-        return "battle";
+        return "game/battle";
     }
 
     @PostMapping("/battle-stage")
@@ -128,7 +161,9 @@ public class GameController {
         @Valid BattleRoundForm battleRoundForm,
         BindingResult bindingResult
     ) {
-        if (!gameData.isExaminationReached()) {
+        if (gameData.isTheGameValid()) {
+            return "redirect:rules";
+        } else if (!gameData.isExaminationReached()) {
             return "redirect:preparation-stage";
         }
 
@@ -146,7 +181,7 @@ public class GameController {
         }
 
         model.addAttribute("gameData", gameData);
-        return "battle";
+        return "game/battle";
     }
 
     @GetMapping("/final-score")
@@ -158,9 +193,56 @@ public class GameController {
             return "redirect:preparation-stage";
         }
 
-        model.addAttribute("finalScore", gameData.calculateFinalScore());
-        model.addAttribute("gameData", gameData);
-        return "final_score";
+        Points points = gameData.getPoints();
+        Score score = null;
+        List<Grade> grades = new ArrayList<>();
+        Authentication authentication = authenticationService.getAuthentication();
+
+        if (authentication.isAuthenticated()) {
+            Optional<User> optionalUser = userService.findByEmail(authentication.getName());
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                ScoreDto scoreDto = new ScoreDto();
+
+                scoreDto.setKnowledge(gameData.getTotalKnowledge());
+                scoreDto.setReputation(points.getReputation());
+                scoreDto.setScore(gameData.calculateFinalScore());
+
+                Optional<Score> optionalScore = scoreService.save(user.getId(), scoreDto);
+
+                if (optionalScore.isPresent()) {
+                    score = optionalScore.get();
+                    for (Short gradeValue : gameData.getGrades()) {
+                        Optional<Grade> optionalGrade = gradeService.save(score.getId(), gradeValue);
+                        optionalGrade.ifPresent(grades::add);
+                    }
+                }
+            }
+        }
+
+        if (score == null){
+            score = new Score();
+            score.setKnowledge(gameData.getTotalKnowledge());
+            score.setReputation(points.getReputation());
+            score.setScore(gameData.calculateFinalScore());
+
+            for (Short gradeValue : gameData.getGrades()) {
+                grades.add(new Grade(score, gradeValue));
+            }
+        }
+
+        model.addAttribute("score", score);
+        model.addAttribute("grades", grades);
+        return "game/final_score";
+    }
+
+    @GetMapping("/rules")
+    public String showRules(
+        Model model,
+        @ModelAttribute("gameData") GameData gameData
+    ) {
+        return "game/rules";
     }
 
     private List<RoundQuestion> getRandomRoundQuestions(int questionCount) {
@@ -181,16 +263,14 @@ public class GameController {
         return roundQuestions;
     }
 
-    @ModelAttribute("gameData")
-    public GameData gameData() {
-        return startNewGame();
-    }
-
     private static int getRandomNumber(int min, int max) {
         return (int)(Math.random()*(max-min+1))+min;
     }
 
     private GameData startNewGame() {
+        if (questionRepository.count() == 0) {
+            return new GameData(new ArrayList<>(), new ArrayList<>());
+        }
         int roundsCount = 5;
         int battleCount = 5;
         List<Round> rounds = new ArrayList<>();
@@ -198,7 +278,7 @@ public class GameController {
 
         for (int i=0; i<roundsCount; i++) {
             int questionCount = getRandomNumber(1, 4);
-            List<RoundQuestion> roundQuestions= getRandomRoundQuestions(questionCount);
+            List<RoundQuestion> roundQuestions = getRandomRoundQuestions(questionCount);
             Round round = new Round(roundQuestions);
             rounds.add(round);
         }

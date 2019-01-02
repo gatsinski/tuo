@@ -7,14 +7,16 @@ import java.util.List;
 
 public class GameData {
     private Points points;
+    private int totalKnowledge;  // Stores the total knowledge gathered during preparation stage
     private List<Round> rounds;
     private int currentRoundIndex;
     private List<BattleRound> battleRounds;
     private int currentBattleRoundIndex;
-    private List<Integer> grades;
+    private List<Short> grades;
 
     public GameData(List<Round> rounds, List<BattleRound> battleRounds) {
         this.points = new Points(0, 0);
+        this.totalKnowledge = 0;
         this.rounds = rounds;
         this.currentRoundIndex = 0;
         this.battleRounds = battleRounds;
@@ -32,6 +34,14 @@ public class GameData {
 
     public void setPoints(Points points) {
         this.points = points;
+    }
+
+    public int getTotalKnowledge() {
+        return totalKnowledge;
+    }
+
+    public void setTotalKnowledge(int totalKnowledge) {
+        this.totalKnowledge = totalKnowledge;
     }
 
     public List<Round> getRounds() {
@@ -70,11 +80,11 @@ public class GameData {
         this.currentBattleRoundIndex = currentBattleRoundIndex;
     }
 
-    public List<Integer> getGrades() {
+    public List<Short> getGrades() {
         return grades;
     }
 
-    public void setGrades(List<Integer> grades) {
+    public void setGrades(List<Short> grades) {
         this.grades = grades;
     }
 
@@ -94,6 +104,10 @@ public class GameData {
         currentBattleRoundIndex++;
     }
 
+    public boolean isTheGameValid() {
+        return this.rounds.size() + this.battleRounds.size() == 0;
+    }
+
     public boolean isExaminationReached() {
         return currentRoundIndex == rounds.size() && rounds.get(rounds.size()-1).isFinished();
     }
@@ -104,19 +118,20 @@ public class GameData {
 
     public void placeBet(int bet) {
         points.knowledge -= bet;
-        int grade = 2;
+        short grade = 2;
 
-        for(int i=3; i<=6; i++){
+        for(short i=3; i<=6; i++){
             int gradeLevel = getRandomNumber((i*5)-3, (i*5)+3);
             if (bet > gradeLevel) {
                 grade = i;
             }
         }
+
         grades.add(grade);
 
         if (points.knowledge == 0) {
             for(int i = currentBattleRoundIndex; i<battleRounds.size(); i++) {
-                grades.add(2);
+                grades.add((short) 2);
             }
             this.currentBattleRoundIndex = this.battleRounds.size();
         }
@@ -125,10 +140,11 @@ public class GameData {
     public void updateScore(Points points) {
         this.points.reputation += points.reputation;
         this.points.knowledge += points.knowledge;
+        this.totalKnowledge += points.knowledge;
     }
 
     public double calculateFinalScore() {
-        double sum = grades.stream().mapToInt(Integer::intValue).sum();
+        double sum = grades.stream().mapToInt(Short::intValue).sum();
         double multiplier = sum / grades.size();
         return round(points.reputation * multiplier, 2);
     }
