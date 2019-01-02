@@ -7,6 +7,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('com.github.fgiannesini.libsass.gradle.plugin:libsass-gradle-plugin:+')
 	}
 }
 
@@ -14,6 +15,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.github.fgiannesini.libsass.gradle.plugin'
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
@@ -41,4 +43,23 @@ dependencies {
     runtimeOnly('org.webjars:bootstrap:4.1.3')
 	runtimeOnly('mysql:mysql-connector-java')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+libSassParameters {
+    inputFilePath = "scss/main.scss"
+
+    outputFilePath = "src/main/resources/static/css/main.css"
+
+    watchedDirectoryPath = "scss"
+
+    sourceMapEmbed = false
+    sourceMapFilePath "src/main/resources/static/css/main.css.map"
+    bourbonInstallationPath "scss"
+
+    compassInstallationPath "src/main/resources/scss"
+
+    libSassProductionParameters {
+        outputStyle "compressed"
+        outputFilePath = "src/main/resources/css/production/main.css"
+    }
 }
