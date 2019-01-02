@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Вход</title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+  </head>
+  <body class="grid">
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <th:block th:replace="fragments/nav :: nav"></th:block>
+    </nav>
+
+    <main class="container">
+      <article class="row">
+        <section class="col-6 offset-md-3 offset-lg-3">
+          <h1>Вход</h1>
+          <form th:action="@{/login}" method="POST">
+            <div th:if="${param.error}">
+              <div class="alert alert-danger">
+                Невалидно име или парола
+              </div>
+            </div>
+            <div th:if="${param.logout}">
+              <div class="alert alert-info">
+                Излязохте успешно.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="username">Потребителско име</label>:
+              <input type="text"
+                     id="username"
+                     name="username"
+                     class="form-control"
+                     autofocus="autofocus"
+                     placeholder="Username"/>
+            </div>
+            <div class="form-group">
+              <label for="password">Парола</label>:
+              <input type="password"
+                     id="password"
+                     name="password"
+                     class="form-control"
+                     placeholder="Password"/>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                  <input type="submit"
+                         name="login-submit"
+                         id="login-submit"
+                         class="form-control btn btn-info"
+                         value="Вход"/>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <span>Нямате регистрация? <a href="/" th:href="@{/registration}">Регистрирайте се от тук.</a></span>
+            </div>
+          </form>
+        </section>
+
+      </article>
+    </main>
+
+    <th:block th:replace="fragments/footer :: footer"></th:block>
+
+  </body>
+</html>
