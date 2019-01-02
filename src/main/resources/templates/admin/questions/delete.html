@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title th:text="'Изтриване на въпрос: ' + ${question.text}"></title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+  </head>
+  <body class="grid">
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <th:block th:replace="fragments/nav :: nav"></th:block>
+    </nav>
+
+    <main class="container">
+      <article class="row">
+        <section class="col-9">
+          <p th:text="'Сигурен ли си, че искаш да изтриеш въпрос с текст: ' + ${question.text}"/>
+
+          <form th:action="@{/admin/questions/{id}/delete(id=${question.id})}" th:object="${questionDeletion}" method="POST">
+
+            <div class="alert alert-danger"
+                 th:if="${#fields.hasGlobalErrors()}"
+                 th:each="error : ${#fields.errors('global')}"
+                 th:text="${error}">
+              Validation error
+            </div>
+
+            <div class="form-group"
+                 th:classappend="${#fields.hasErrors('confirmation')}? 'has-error':''">
+              <input id="confirmation"
+                     type="checkbox"
+                     th:field="*{confirmation}"/>
+              <label class="control-label" for="confirmation">
+                Потвърждавам, че искам да изтрия въпроса.
+              </label>
+              <p class="error-message"
+                 th:each="error : ${#fields.errors('confirmation')}"
+                 th:text="${error}">Validation error</p>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-danger">Изтрий</button>
+              <a th:href="@{/admin/questions/{id}(id=${question.id})}" class="btn btn-info">Отказвам се</a>
+            </div>
+          </form>
+        </section>
+
+      </article>
+    </main>
+
+    <th:block th:replace="fragments/footer :: footer"></th:block>
+
+  </body>
+</html>

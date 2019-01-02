@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Списък с въпроси</title>
+    <th:block th:replace="fragments/head :: head"></th:block>
+  </head>
+  <body class="grid">
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <th:block th:replace="fragments/nav :: nav"></th:block>
+    </nav>
+
+    <main class="container">
+      <article class="row">
+
+        <section class="col-6">
+          <ul class="list-group list-group-flush">
+            <li th:each="question: ${questions}" class="list-group-item">
+              <a th:text="${question.text}" th:href="@{/admin/questions/{id}/(id=${question.id})}"/>
+            </li>
+          </ul>
+        </section>
+
+        <aside class="col-6">
+          <form th:action="@{/admin/questions}" th:object="${question}" method="POST">
+            <div class="alert alert-danger"
+               th:if="${#fields.hasGlobalErrors()}"
+               th:each="error : ${#fields.errors('global')}"
+               th:text="${error}">
+              Validation error
+            </div>
+            <div class="form-group"
+                 th:classappend="${#fields.hasErrors('text')}? 'has-error':''">
+              <label for="text" class="control-label">Текст</label>
+              <input id="text"
+                     class="form-control"
+                     th:field="*{text}"/>
+              <p class="error-message"
+                 th:each="error: ${#fields.errors('text')}"
+                 th:text="${error}">Validation error</p>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-success">Добави</button>
+            </div>
+          </form>
+        </aside>
+      </article>
+    </main>
+
+    <th:block th:replace="fragments/footer :: footer"></th:block>
+
+  </body>
+</html>
