@@ -50,8 +50,8 @@ public class QuestionAdminController {
 
     @PostMapping
     public String submitQuestionCreateForm(Model model,
-                                     @ModelAttribute("question") @Valid QuestionDto questionDto,
-                                     BindingResult result) {
+                                           @ModelAttribute("question") @Valid QuestionDto questionDto,
+                                           BindingResult result) {
         Optional<Question> optionalQuestion = questionService.findByText(questionDto.getText());
         if (optionalQuestion.isPresent()){
             result.rejectValue("text", null, "There is already a question with that text");
