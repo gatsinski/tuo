@@ -16,6 +16,9 @@ public class Question extends AuditModel {
     @Column(unique = true)
     private String text;
 
+    @Enumerated(EnumType.STRING)
+    private QuestionImage image;
+
     public Question() {
     }
 
@@ -38,5 +41,13 @@ public class Question extends AuditModel {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public QuestionImage getImage() {
+        return image;
+    }
+
+    public void setImage(QuestionImage image) {
+        this.image = image;
     }
 }

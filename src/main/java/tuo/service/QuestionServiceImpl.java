@@ -36,6 +36,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Question save(QuestionDto questionDto) {
         Question question = new Question();
         question.setText(questionDto.getText());
+        question.setImage(questionDto.getImage());
         return questionRepository.save(question);
     }
 
@@ -46,6 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
         if (optionalQuestion.isPresent()) {
             Question question = optionalQuestion.get();
             question.setText(questionDto.getText());
+            question.setImage(questionDto.getImage());
             return Optional.of(questionRepository.save(question));
         } else {
             return Optional.empty();
