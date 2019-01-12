@@ -245,6 +245,13 @@ public class GameController {
         return "game/rules";
     }
 
+    @GetMapping("/ranking")
+    public String showRanking(Model model) {
+        List<Score> scores = scoreService.findTop(10, "score");
+        model.addAttribute("scores", scores);
+        return "game/ranking";
+    }
+
     private List<RoundQuestion> getRandomRoundQuestions(int questionCount) {
         long count = questionRepository.count();
         List<RoundQuestion> roundQuestions = new ArrayList<>();

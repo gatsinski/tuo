@@ -2,7 +2,9 @@ package tuo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import tuo.dto.ScoreDto;
 import tuo.model.Score;
@@ -29,6 +31,13 @@ public class ScoreServiceImpl implements ScoreService {
     @Override
     public List<Score> findByUserId(Long userId) {
         Page<Score> pages = scoreRepository.findByUserId(userId, Pageable.unpaged());
+        return pages.getContent();
+    }
+
+    @Override
+    public List<Score> findTop(Integer limit, String field) {
+        PageRequest pageRequest = PageRequest.of(0, limit, Sort.Direction.DESC, field);
+        Page<Score> pages = scoreRepository.findAll(pageRequest);
         return pages.getContent();
     }
 

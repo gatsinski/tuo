@@ -11,6 +11,8 @@ public interface ScoreService {
 
     List<Score> findByUserId(Long userId);
 
+    List<Score> findTop(Integer limit, String field);
+
     Optional<Score> findById(Long id);
 
     Optional<Score> save(Long userId, ScoreDto scoreDto);
