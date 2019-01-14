@@ -76,6 +76,9 @@ h2 {
 p {
   font-size: 1em; }
 
+a {
+  color: #144f8e; }
+
 /* Header */
 .dropdown-menu {
   margin: 0;
@@ -103,6 +106,15 @@ p {
 main {
   background: #fff;
   padding: 20px 10px; }
+
+.btn-success {
+  background-color: #52a765; }
+
+.btn-primary {
+  background-color: #4c8dd4; }
+
+.btn-danger {
+  background-color: #bb5962; }
 
 /* Footer */
 footer {

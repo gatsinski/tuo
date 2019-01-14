@@ -6,6 +6,10 @@ $color-dark: #333;
 $royal-blue: #4169E1;
 $cerulean: #007BA7;
 
+$success: #52a765;
+$primary: #4c8dd4;
+$danger: #bb5962;
+
 $grid-breakpoints: (
   xs: 0,
   sm: 576px,
@@ -33,6 +37,10 @@ h2 {
 
 p {
   font-size: 1em;
+}
+
+a {
+  color: #144f8e;
 }
 
 /* Header */
@@ -78,11 +86,24 @@ main {
   padding: 20px 10px;
 }
 
+.btn-success {
+  background-color: $success;
+}
+
+.btn-primary {
+  background-color: $primary;
+}
+
+.btn-danger {
+  background-color: $danger;
+}
+
 /* Footer */
 footer {
   background: #ccc;
   padding: 20px;
 }
+
 
 
 
